@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #3d3d3d;
+        }
+        
+        .container {
+            display: flex;
+            transform-style: preserve-3d;
+            gap: 1vw;
+            transform: rotateY(30deg) rotateX(20deg);
+        }
+        
+        .container .block {
+            position: relative;
+            width: 10vw;
+            height: 10vw;
+            transform-style: preserve-3d;
+        }
+        
+        .container .block:nth-child(3) {
+            margin-left: 20px;
+        }
+        
+        .container .block:nth-child(4) {
+            margin-right: 20px;
+        }
+        
+        .container .block::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #373737;
+            transform-origin: left;
+            transform: rotateY(90deg) translateX(-5vw);
+        }
+        
+        .container .block span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(#434343, #535353);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5vw;
+            color: #fff;
+            transform: rotateX(calc(90deg * var(--i))) translateZ(5vw);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 时 -->
+        <div class="block">
+            <span style="--i:0"></span>
+            <span style="--i:1"></span>
+            <span style="--i:2"></span>
+            <span style="--i:3"></span>
+        </div>
+        <div class="block">
+            <span style="--i:0"></span>
+            <span style="--i:1"></span>
+            <span style="--i:2"></span>
+            <span style="--i:3"></span>
+        </div>
+        <!-- 分 -->
+        <div class="block">
+            <span style="--i:0"></span>
+            <span style="--i:1"></span>
+            <span style="--i:2"></span>
+            <span style="--i:3"></span>
+        </div>
+        <div class="block">
+            <span style="--i:0"></span>
+            <span style="--i:1"></span>
+            <span style="--i:2"></span>
+            <span style="--i:3"></span>
+        </div>
+        <!-- 秒 -->
+        <div class="block">
+            <span style="--i:0"></span>
+            <span style="--i:1"></span>
+            <span style="--i:2"></span>
+            <span style="--i:3"></span>
+        </div>
+        <div class="block">
+            <span style="--i:0"></span>
+            <span style="--i:1"></span>
+            <span style="--i:2"></span>
+            <span style="--i:3"></span>
+        </div>
+    </div>
+    <script>
+        let elBlock = document.querySelectorAll(".block");
+        let td = 0;
+        let s2pv = s1pv = m2pv = m1pv = h1pv = h2pv = '-1';
+        let s2ct = s1ct = m2ct = m1ct = h1ct = h2ct = 0;
+        let indexs = {
+            "0": {
+                current: 0,
+                next: 3,
+            },
+            "90": {
+                current: 3,
+                next: 2
+            },
+            "180": {
+                current: 2,
+                next: 1
+            },
+            "270": {
+                current: 1,
+                next: 0
+            }
+        }
+
+        function loop() {
+            let second = `${new Date().getSeconds()}`;
+            let minute = `${new Date().getMinutes()}`;
+            let hour = `${new Date().getHours()}`;
+            let s1 = second.length === 2 ? second[0] : '0';
+            let s2 = second.length === 2 ? second[1] : second[0];
+            let m1 = minute.length === 2 ? minute[0] : '0';
+            let m2 = minute.length === 2 ? minute[1] : minute[0];
+            let h1 = hour.length === 2 ? hour[0] : '0';
+            let h2 = hour.length === 2 ? hour[1] : hour[0];
+            if (s2pv !== s2) {
+                s2ct += 90;
+                elBlock[5].style.transition = "0.5s ease-in-out";
+                elBlock[5].style.transform = `rotateX(${s2ct}deg)`;
+                let r = s2ct % 360;
+                elBlock[5].children[indexs[r].current].innerText = s2;
+                elBlock[5].children[indexs[r].next].innerText = s2 === '9' ? '0' : `${Number(s2) + 1}`;
+                s2pv = s2;
+            }
+            if (s1pv !== s1) {
+                s1ct += 90;
+                elBlock[4].style.transition = "0.5s ease-in-out";
+                elBlock[4].style.transform = `rotateX(${s1ct}deg)`;
+                let r = s1ct % 360;
+                elBlock[4].children[indexs[r].current].innerText = s1;
+                elBlock[4].children[indexs[r].next].innerText = s1 === '5' ? '0' : `${Number(s1) + 1}`;
+                s1pv = s1;
+            }
+            if (m2pv !== m2) {
+                m2ct += 90;
+                elBlock[3].style.transition = "0.5s ease-in-out";
+                elBlock[3].style.transform = `rotateX(${m2ct}deg)`;
+                let r = m2ct % 360;
+                elBlock[3].children[indexs[r].current].innerText = m2;
+                elBlock[3].children[indexs[r].next].innerText = m2 === '9' ? '0' : `${Number(m2) + 1}`;
+                m2pv = m2;
+            }
+            if (m1pv !== m1) {
+                m1ct += 90;
+                elBlock[2].style.transition = "0.5s ease-in-out";
+                elBlock[2].style.transform = `rotateX(${m1ct}deg)`;
+                let r = m1ct % 360;
+                elBlock[2].children[indexs[r].current].innerText = m1;
+                elBlock[2].children[indexs[r].next].innerText = m1 === '5' ? '0' : `${Number(m1) + 1}`;
+                m1pv = m1;
+            }
+            if (h2pv !== h2) {
+                h2ct += 90;
+                elBlock[1].style.transition = "0.5s ease-in-out";
+                elBlock[1].style.transform = `rotateX(${h2ct}deg)`;
+                let r = h2ct % 360;
+                elBlock[1].children[indexs[r].current].innerText = h2;
+                if (h1 === "2") {
+                    elBlock[1].children[indexs[r].next].innerText = h2 === '3' ? '0' : `${Number(h2) + 1}`;
+                } else {
+                    elBlock[1].children[indexs[r].next].innerText = h2 === '9' ? '0' : `${Number(h2) + 1}`;
+                }
+                h2pv = h2;
+            }
+            if (h1pv !== h1) {
+                h1ct += 90;
+                elBlock[0].style.transition = "0.5s ease-in-out";
+                elBlock[0].style.transform = `rotateX(${h1ct}deg)`;
+                let r = h1ct % 360;
+                elBlock[0].children[indexs[r].current].innerText = h1;
+                elBlock[0].children[indexs[r].next].innerText = h1 === '2' ? '0' : `${Number(h1) + 1}`;
+                h1pv = h1;
+            }
+            td = setTimeout(loop, 1000);
+        }
+
+        document.onvisibilitychange = function() {
+            if (document.hidden) {
+                clearTimeout(td);
+            } else {
+                loop();
+            }
+        }
+
+        elBlock[5].addEventListener("transitionend webkitTransitionEnd", function() {
+            if (s2ct === 360) {
+                s2ct = 0;
+                this.style.transition = "none";
+                this.style.transform = `rotateX(${s2ct}deg)`;
+            }
+        });
+
+        elBlock[4].addEventListener("transitionend webkitTransitionEnd", function() {
+            if (s1ct === 360) {
+                s1ct = 0;
+                this.style.transition = "none";
+                this.style.transform = `rotateX(${s1ct}deg)`;
+            }
+        });
+
+        elBlock[3].addEventListener("transitionend webkitTransitionEnd", function() {
+            if (m2ct === 360) {
+                m2ct = 0;
+                this.style.transition = "none";
+                this.style.transform = `rotateX(${m2ct}deg)`;
+            }
+        });
+
+        elBlock[2].addEventListener("transitionend webkitTransitionEnd", function() {
+            if (m1ct === 360) {
+                m1ct = 0;
+                this.style.transition = "none";
+                this.style.transform = `rotateX(${m1ct}deg)`;
+            }
+        });
+
+        elBlock[1].addEventListener("transitionend webkitTransitionEnd", function() {
+            if (h2ct === 360) {
+                h2ct = 0;
+                this.style.transition = "none";
+                this.style.transform = `rotateX(${h2ct}deg)`;
+            }
+        });
+
+        elBlock[0].addEventListener("transitionend webkitTransitionEnd", function() {
+            if (h1ct === 360) {
+                h1ct = 0;
+                this.style.transition = "none";
+                this.style.transform = `rotateX(${h1ct}deg)`;
+            }
+        });
+
+        loop();
+    </script>
+</body>
+
+</html>
